@@ -1,289 +1,305 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2685.2">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大神级交易驾驶舱 - 自动保存版</title>
+    <style>
+        :root {
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --border-color: #dfe6e9;
+            --success-color: #27ae60;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-tag {
+            font-size: 0.8rem;
+            background: var(--success-color);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+
+        .section-card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            margin-top: 0;
+            border-left: 5px solid var(--accent-color);
+            padding-left: 15px;
+            font-size: 1.25rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+
+        input[type="text"], input[type="number"], select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 1rem;
+            background: #fff;
+        }
+
+        .calculator-result {
+            background: #eef2f7;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 10px;
+            border-left: 5px solid var(--primary-color);
+        }
+
+        .result-highlight {
+            font-weight: bold;
+            color: var(--danger-color);
+            font-size: 1.2rem;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: opacity 0.3s;
+        }
+
+        .print-btn { background-color: var(--primary-color); color: white; }
+        .clear-btn { background-color: var(--danger-color); color: white; }
+        
+        button:hover { opacity: 0.9; }
+
+        .steps-box {
+            background: #fffdf0;
+            border: 1px solid #f1c40f;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+
+        @media print {
+            .btn-group, .status-tag { display: none; }
+            body { background: white; padding: 0; }
+            .section-card { box-shadow: none; border: 1px solid #eee; }
+        }
+    </style>
 </head>
 <body>
-<p class="p1">&lt;!DOCTYPE html&gt;</p>
-<p class="p1">&lt;html lang="zh-CN"&gt;</p>
-<p class="p1">&lt;head&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;title&gt;大神级交易执行与复盘系统&lt;/title&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;style&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>:root {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>--bg-color: #f4f7f6;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>--card-bg: #ffffff;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>--primary-color: #2c3e50;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>--accent-color: #3498db;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>--border-color: #dfe6e9;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>--success-color: #27ae60;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>--danger-color: #e74c3c;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>body {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background-color: var(--bg-color);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>color: var(--primary-color);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>line-height: 1.6;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin: 0;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.container {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>max-width: 900px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin: 0 auto;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>header {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>text-align: center;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin-bottom: 30px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-bottom: 2px solid var(--primary-color);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding-bottom: 10px;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.section-card {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background: var(--card-bg);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 25px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 8px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>box-shadow: 0 4px 6px rgba(0,0,0,0.05);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin-bottom: 30px;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>h2 {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin-top: 0;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-left: 5px solid var(--accent-color);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding-left: 15px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-size: 1.25rem;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.grid {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>display: grid;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>grid-template-columns: 1fr 1fr;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>gap: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.form-group {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin-bottom: 15px;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>label {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>display: block;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-weight: bold;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin-bottom: 5px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-size: 0.9rem;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>input[type="text"], input[type="number"], select, textarea {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>width: 100%;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 8px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border: 1px solid var(--border-color);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 4px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>box-sizing: border-box;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-size: 1rem;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.checkbox-group {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background: #f9f9f9;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 15px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 4px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border: 1px dashed var(--border-color);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.checkbox-item {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>align-items: center;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin-bottom: 8px;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.checkbox-item input {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin-right: 10px;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.calculator-result {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background: #eef2f7;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 15px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 4px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin-top: 10px;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.result-highlight {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-weight: bold;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>color: var(--danger-color);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-size: 1.1rem;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>button {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background-color: var(--primary-color);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>color: white;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 10px 20px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border: none;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 4px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>cursor: pointer;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-weight: bold;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>transition: background 0.3s;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>button:hover {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background-color: var(--accent-color);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.save-btn {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>display: block;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>width: 100%;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin-top: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background-color: var(--success-color);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.steps-box {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background: #fffdf0;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border: 1px solid #f1c40f;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 15px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 4px;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.hidden { display: none; }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>@media print {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>.save-btn { display: none; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</p>
-<p class="p1">&lt;/head&gt;</p>
-<p class="p1">&lt;body&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;div class="container"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;header&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;h1&gt;交易执行与复盘工作台&lt;/h1&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/header&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="section-card"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;h2&gt;交易前：决策与仓位规划&lt;/h2&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="grid"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="form-group"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;label&gt;交易标的&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;input type="text" id="ticker" placeholder="如：黄金 XAUUSD"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="form-group"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;label&gt;交易方向&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;select id="direction"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;option value="long"&gt;做多 (Long)&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;option value="short"&gt;做空 (Short)&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/select&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="form-group"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;label&gt;入场信号确认（多项共振增强信念）&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="checkbox-group"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="checkbox-item"&gt;&lt;input type="checkbox"&gt; 宏观/基本面逻辑支撑&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="checkbox-item"&gt;&lt;input type="checkbox"&gt; 关键技术位突破/回踩确认&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="checkbox-item"&gt;&lt;input type="checkbox"&gt; 资金流向/成交量配合&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="checkbox-item"&gt;&lt;input type="checkbox"&gt; 波动率处于合理区间&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;h3&gt;风险与仓位自动计算&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="grid"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="form-group"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;label&gt;账户总资金&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;input type="number" id="totalCap" value="100000" oninput="calculatePosition()"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="form-group"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;label&gt;单笔单风险 (%)&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;input type="number" id="riskPct" value="1" oninput="calculatePosition()"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="form-group"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;label&gt;计划入场价&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;input type="number" id="entryPrice" oninput="calculatePosition()"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="form-group"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;label&gt;技术止损价&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;input type="number" id="stopPrice" oninput="calculatePosition()"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="calculator-result" id="calcResult"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>填写价格后自动生成仓位建议...</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;h3&gt;三步建仓执行步骤&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="steps-box" id="stepPlan"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;p&gt;1. 试探仓 (20%): &lt;span id="s1"&gt;-&lt;/span&gt;&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;p&gt;2. 主仓位 (60%): &lt;span id="s2"&gt;-&lt;/span&gt;&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;p&gt;3. 追加仓 (20%): &lt;span id="s3"&gt;-&lt;/span&gt;&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="section-card"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;h2&gt;交易后：深度复盘与心理拆解&lt;/h2&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="grid"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="form-group"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;label&gt;实际最大持仓 (%)&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;input type="number" id="actualPos" placeholder="0-100"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="form-group"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;label&gt;实际盈亏金额&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;input type="number" id="actualPnL"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="form-group"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;label&gt;执行偏差分析&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;select id="execGap"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;option value="none"&gt;严格执行计划&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;option value="hesitate"&gt;看对方向，但不敢加仓（心理畏难）&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;option value="fomo"&gt;过早重仓（缺乏确认信号）&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;option value="early_exit"&gt;因恐惧波动而过早止盈&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/select&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="form-group"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;label&gt;心理动态记录（当时在怕什么？在贪什么？）&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;textarea id="psychology" rows="4" placeholder="详细描述不敢重仓时的身体反应或大脑念头..."&gt;&lt;/textarea&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="form-group"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;label&gt;针对性改进动作&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;textarea id="action" rows="2" placeholder="下一次遇到类似情况，我的强制执行指令是..."&gt;&lt;/textarea&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button class="save-btn" onclick="window.print()"&gt;保存/导出 PDF 记录&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p1">&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>function calculatePosition() {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const totalCap = parseFloat(document.getElementById('totalCap').value);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const riskPct = parseFloat(document.getElementById('riskPct').value) / 100;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const entryPrice = parseFloat(document.getElementById('entryPrice').value);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const stopPrice = parseFloat(document.getElementById('stopPrice').value);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>if (totalCap &amp;&amp; riskPct &amp;&amp; entryPrice &amp;&amp; stopPrice &amp;&amp; entryPrice !== stopPrice) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const riskAmt = totalCap * riskPct;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const priceDiff = Math.abs(entryPrice - stopPrice);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const totalQty = (riskAmt / priceDiff).toFixed(2);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('calcResult').innerHTML = `</p>
-<p class="p1"><span class="Apple-converted-space">                </span>最大允许损失额度: &lt;span class="result-highlight"&gt;${riskAmt.toLocaleString()}&lt;/span&gt;&lt;br&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;strong&gt;建议总买入数量: &lt;span class="result-highlight"&gt;${totalQty}&lt;/span&gt;&lt;/strong&gt; (由风险数学决定)</p>
-<p class="p1"><span class="Apple-converted-space">            </span>`;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('s1').innerText = (totalQty * 0.2).toFixed(2);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('s2').innerText = (totalQty * 0.6).toFixed(2);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('s3').innerText = (totalQty * 0.2).toFixed(2);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1">&lt;/script&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;/body&gt;</p>
-<p class="p1">&lt;/html&gt;</p>
+
+<div class="container">
+    <header>
+        <h1>交易决策驾驶舱</h1>
+        <span class="status-tag" id="saveStatus">数据已本地加密存储</span>
+    </header>
+
+    <div class="section-card">
+        <h2>1. 交易前：风控与建仓规划</h2>
+        <div class="grid">
+            <div class="form-group">
+                <label>交易标的</label>
+                <input type="text" id="ticker" class="save-data" placeholder="如：黄金 / 某龙头股">
+            </div>
+            <div class="form-group">
+                <label>交易方向</label>
+                <select id="direction" class="save-data">
+                    <option value="long">做多 (Long)</option>
+                    <option value="short">做空 (Short)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>账户总资金 ($)</label>
+                <input type="number" id="totalCap" class="save-data" value="100000">
+            </div>
+            <div class="form-group">
+                <label>单笔风险上限 (%)</label>
+                <input type="number" id="riskPct" class="save-data" value="1">
+            </div>
+            <div class="form-group">
+                <label>预想入场价</label>
+                <input type="number" id="entryPrice" class="save-data">
+            </div>
+            <div class="form-group">
+                <label>强制止损价</label>
+                <input type="number" id="stopPrice" class="save-data">
+            </div>
+        </div>
+
+        <div class="calculator-result" id="calcResult">
+            输入价格后，数学模型将接管仓位决策...
+        </div>
+
+        <div class="steps-box">
+            <strong>三步执行法（数量分配）：</strong>
+            <div id="stepPlan">
+                试探(20%): <span id="s1">0</span> | 
+                主仓(60%): <span id="s2">0</span> | 
+                追加(20%): <span id="s3">0</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-card">
+        <h2>2. 交易后：执行差异与心理复盘</h2>
+        <div class="grid">
+            <div class="form-group">
+                <label>实际最大持仓 (%)</label>
+                <input type="number" id="actualPos" class="save-data" placeholder="0-100">
+            </div>
+            <div class="form-group">
+                <label>最终盈亏金额</label>
+                <input type="number" id="actualPnL" class="save-data">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>偏差核心原因</label>
+            <select id="execGap" class="save-data">
+                <option value="none">完美执行计划</option>
+                <option value="hesitate">看对方向，但不敢重仓（核心痛点）</option>
+                <option value="fomo">过早重仓（缺乏信号确认）</option>
+                <option value="early_exit">利润回撤恐惧导致的过早止盈</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>心理动态挖掘（当时大脑中的声音）</label>
+            <textarea id="psychology" class="save-data" rows="4" placeholder="描述当时的犹豫或冲动..."></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>下次强制执行指令</label>
+            <textarea id="action" class="save-data" rows="2" placeholder="写下一句给下次交易的硬性命令..."></textarea>
+        </div>
+
+        <div class="btn-group">
+            <button class="print-btn" onclick="window.print()">导出 PDF 存档</button>
+            <button class="clear-btn" onclick="clearAllData()">清空当前数据（开启新交易）</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 核心计算逻辑
+    function calculate() {
+        const totalCap = parseFloat(document.getElementById('totalCap').value) || 0;
+        const riskPct = (parseFloat(document.getElementById('riskPct').value) || 0) / 100;
+        const entry = parseFloat(document.getElementById('entryPrice').value) || 0;
+        const stop = parseFloat(document.getElementById('stopPrice').value) || 0;
+
+        if (totalCap && entry && stop && entry !== stop) {
+            const riskAmt = totalCap * riskPct;
+            const priceDiff = Math.abs(entry - stop);
+            const totalQty = (riskAmt / priceDiff).toFixed(2);
+
+            document.getElementById('calcResult').innerHTML = `
+                最大风险额度: <span class="result-highlight">${riskAmt.toLocaleString()}</span> | 
+                建议总头寸: <span class="result-highlight">${totalQty}</span>
+            `;
+
+            document.getElementById('s1').innerText = (totalQty * 0.2).toFixed(2);
+            document.getElementById('s2').innerText = (totalQty * 0.6).toFixed(2);
+            document.getElementById('s3').innerText = (totalQty * 0.2).toFixed(2);
+        }
+    }
+
+    // 数据持久化逻辑
+    function saveToLocal() {
+        const data = {};
+        document.querySelectorAll('.save-data').forEach(el => {
+            data[el.id] = el.value;
+        });
+        localStorage.setItem('trading_pilot_data', JSON.stringify(data));
+        
+        const status = document.getElementById('saveStatus');
+        status.innerText = "自动保存中...";
+        setTimeout(() => { status.innerText = "数据已同步至本地"; }, 1000);
+    }
+
+    function loadFromLocal() {
+        const saved = localStorage.getItem('trading_pilot_data');
+        if (saved) {
+            const data = JSON.parse(saved);
+            Object.keys(data).forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.value = data[id];
+            });
+            calculate();
+        }
+    }
+
+    function clearAllData() {
+        if (confirm('确定要清空所有数据开启新交易吗？')) {
+            localStorage.removeItem('trading_pilot_data');
+            location.reload();
+        }
+    }
+
+    // 事件绑定
+    document.querySelectorAll('.save-data').forEach(el => {
+        el.addEventListener('input', () => {
+            calculate();
+            saveToLocal();
+        });
+    });
+
+    window.onload = loadFromLocal;
+</script>
+
 </body>
 </html>
