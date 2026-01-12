@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>交易决策系统</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Noto Sans SC', -apple-system, sans-serif;
+      background: #f8fafc;
+      color: #1e293b;
+      min-height: 100vh;
+    }
+    input, textarea, select, button { font-family: inherit; }
+    input:focus, textarea:focus, select:focus { outline: none; border-color: #3b82f6 !important; }
+    button:hover { opacity: 0.9; }
+    
+    /* Login Page */
+    .login-container {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .login-box {
+      background: #fff;
+      padding: 32px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      width: 100%;
+      max-width: 360px;
+    }
+    .login-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+    .login-input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 15px;
+      margin-bottom: 16px;
+    }
+    .login-btn {
+      width: 100%;
+      padding: 12px;
+      background: #3b82f6;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .login-error {
+      color: #dc2626;
+      font-size: 13px;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+    .login-hint {
+      color: #94a3b8;
+      font-size: 12px;
+      margin-top: 16px;
+      text-align: center;
+    }
+    
+    /* App Styles */
+    .app { display: none; }
+    .app.active { display: block; }
+    
+    .header {
+      background: #fff;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .title { font-size: 18px; font-weight: 600; }
+    .header-actions { display: flex; gap: 8px; }
+    .back-btn, .logout-btn {
+      background: none;
+      border: none;
+      color: #3b82f6;
+      font-size: 14px;
+      cursor: pointer;
+      padding: 8px 12px;
+    }
+    .logout-btn { color: #94a3b8; }
+    
+    .content {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    .primary-btn {
+      width: 100%;
+      padding: 12px;
+      background: #3b82f6;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+    
+    .empty {
+      text-align: center;
+      color: #94a3b8;
+      padding: 40px 20px;
+    }
+    
+    .record-list { display: flex; flex-direction: column; gap: 12px; }
+    
+    .record-card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 14px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+    .record-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .tag {
+      padding: 2px 8px;
+      border-radius: 4px;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .tag-long { background: #dc2626; }
+    .tag-short { background: #16a34a; }
+    .ticker { font-weight: 600; font-size: 15px; flex: 1; }
+    .record-date { color: #94a3b8; font-size: 13px; }
+    .completed-tag {
+      background: #dcfce7;
+      color: #16a34a;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+    .record-body {
+      font-size: 13px;
+      color: #64748b;
+      margin-bottom: 10px;
+    }
+    .record-row {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 4px;
+    }
+    .profit { color: #16a34a; }
+    .loss { color: #dc2626; }
+    .record-actions {
+      display: flex;
+      gap: 8px;
+      border-top: 1px solid #f1f5f9;
+      padding-top: 10px;
+    }
+    .small-btn {
+      padding: 6px 12px;
+      background: #f1f5f9;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+      color: #475569;
+    }
+    .small-btn-primary {
+      padding: 6px 12px;
+      background: #3b82f6;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+      color: #fff;
+    }
+    .small-btn-danger {
+      padding: 6px 12px;
+      background: #fef2f2;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+      color: #dc2626;
+    }
+    
+    .section-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+    
+    .form-section {
+      background: #fff;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+    
+    .row { display: flex; gap: 12px; }
+    .row + .row { margin-top: 12px; }
+    .field { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+    
+    .label {
+      font-size: 14px;
+      font-weight: 500;
+      color: #475569;
+      margin-bottom: 8px;
+    }
+    .sub-label { font-size: 12px; color: #94a3b8; }
+    
+    .input {
+      padding: 10px 12px;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      font-size: 14px;
+      color: #1e293b;
+      background: #fff;
+      width: 100%;
+    }
+    textarea.input { min-height: 60px; resize: vertical; }
+    
+    .calculated {
+      padding: 10px 12px;
+      background: #f8fafc;
+      border-radius: 6px;
+      font-size: 14px;
+      color: #64748b;
+      font-family: monospace;
+    }
+    .calculated-primary { color: #3b82f6; font-weight: 600; }
+    .calculated-success { color: #16a34a; font-weight: 600; }
+    
+    .check-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    
+    .step-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .step-label {
+      font-size: 13px;
+      color: #64748b;
+      min-width: 100px;
+    }
+    
+    .linked-info {
+      background: #eff6ff;
+      color: #3b82f6;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      margin-bottom: 16px;
+    }
+    
+    .question-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 14px;
+    }
+    .radio-group { display: flex; gap: 16px; }
+    .radio-group label { display: flex; align-items: center; gap: 4px; cursor: pointer; }
+    
+    .save-btn {
+      width: 100%;
+      padding: 14px;
+      background: #3b82f6;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+    
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+<!-- Login Page -->
+<div id="loginPage" class="login-container">
+  <div class="login-box">
+    <h1 class="login-title">🔐 交易决策系统</h1>
+    <div id="loginError" class="login-error hidden"></div>
+    <input type="password" id="passwordInput" class="login-input" placeholder="请输入访问密码" onkeypress="if(event.key==='Enter')login()">
+    <button class="login-btn" onclick="login()">进入系统</button>
+    <p class="login-hint">首次使用请设置密码，之后每次访问需输入相同密码</p>
+  </div>
+</div>
+
+<!-- Main App -->
+<div id="app" class="app">
+  <header class="header">
+    <h1 class="title">交易决策系统</h1>
+    <div class="header-actions">
+      <button id="backBtn" class="back-btn hidden" onclick="showList()">← 返回列表</button>
+      <button class="logout-btn" onclick="logout()">退出</button>
+    </div>
+  </header>
+  
+  <div class="content">
+    <!-- List View -->
+    <div id="listView">
+      <button class="primary-btn" onclick="showPreForm()">+ 新建交易计划</button>
+      <div id="recordList" class="record-list"></div>
+      <div id="emptyState" class="empty">暂无交易记录，点击上方按钮创建</div>
+    </div>
+    
+    <!-- Pre-Trade Form -->
+    <div id="preView" class="hidden">
+      <h2 class="section-title">交易前 · 决策清单</h2>
+      
+      <div class="form-section">
+        <div class="row">
+          <div class="field">
+            <label class="label">标的</label>
+            <input type="text" id="ticker" class="input" placeholder="如 AAPL">
+          </div>
+          <div class="field">
+            <label class="label">方向</label>
+            <select id="direction" class="input">
+              <option value="long">做多</option>
+              <option value="short">做空</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="label">日期</label>
+            <input type="date" id="tradeDate" class="input">
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-section">
+        <label class="label">信号确认 <span id="signalCount">(0/2)</span></label>
+        <div class="check-group">
+          <label class="check-item">
+            <input type="checkbox" id="macroSignal" onchange="updateSignalCount()">
+            <span>宏观/基本面</span>
+          </label>
+          <label class="check-item">
+            <input type="checkbox" id="technicalSignal" onchange="updateSignalCount()">
+            <span>技术面共振</span>
+          </label>
+          <label class="check-item">
+            <input type="checkbox" id="sentimentSignal" onchange="updateSignalCount()">
+            <span>资金/情绪面</span>
+          </label>
+        </div>
+        <textarea id="notes" class="input" placeholder="信号说明..."></textarea>
+      </div>
+      
+      <div class="form-section">
+        <label class="label">风险计算</label>
+        <div class="row">
+          <div class="field">
+            <span class="sub-label">总资金</span>
+            <input type="number" id="totalCapital" class="input" placeholder="100000" oninput="calculateRisk()">
+          </div>
+          <div class="field">
+            <span class="sub-label">风险 %</span>
+            <input type="number" id="riskPercent" class="input" value="2" oninput="calculateRisk()">
+          </div>
+          <div class="field">
+            <span class="sub-label">风险金额</span>
+            <div id="riskAmount" class="calculated">-</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <span class="sub-label">入场价</span>
+            <input type="number" id="entryPrice" class="input" oninput="calculateRisk()">
+          </div>
+          <div class="field">
+            <span class="sub-label">止损价</span>
+            <input type="number" id="stopLossPrice" class="input" oninput="calculateRisk()">
+          </div>
+          <div class="field">
+            <span class="sub-label">应买数量</span>
+            <div id="totalQty" class="calculated calculated-primary">-</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <span class="sub-label">应买入总金额</span>
+            <div id="totalAmount" class="calculated calculated-success">-</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-evil">
+        <label class="label">建仓计划</label>
+        <div class="step-row">
+          <span class="step-label">① 试探仓 20%</span>
+          <input type="text" id="step1Condition" class="input" value="逻辑初步形成" style="flex:1">
+        </div>
+        <div class="step-row">
+          <span class="step-label">② 主仓位 60%</span>
+          <input type="text" id="step2Condition" class="input" placeholder="触发条件" style="flex:1">
+        </div>
+        <div class="step-row">
+          <span class="step-label">③ 追加仓 20%</span>
+          <input type="text" id="step3Condition" class="input" placeholder="触发条件" style="flex:1">
+        </div>
+      </div>
+      
+      <button class="save-btn" onclick="savePre()">保存</button>
+    </div>
+    
+    <!-- Post-Trade Form -->
+    <div id="postView" class="hidden">
+      <h2 class="section-title">交易后 · 复盘</h2>
+      <div id="linkedInfo" class="linked-info"></div>
+      
+      <div class="form-section">
+        <div class="row">
+          <div class="field">
+            <label class="label">平仓日期</label>
+            <input type="date" id="closeDate" class="input">
+          </div>
+          <div class="field">
+            <label class="label">实际盈亏</label>
+            <input type="number" id="actualPnL" class="input" placeholder="正数盈利，负数亏损">
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-section">
+        <label class="label">执行评估</label>
+        <div class="question-row">
+          <span>按计划建仓？</span>
+          <div class="radio-group">
+            <label><input type="radio" name="followedPlan" value="yes"> 是</label>
+            <label><input type="radio" name="followedPlan" value="no"> 否</label>
+          </div>
+        </div>
+        <div class="question-row">
+          <span>信号出现时犹豫？</span>
+          <div class="radio-group">
+            <label><input type="radio" name="hesitated" value="yes"> 是</label>
+            <label><input type="radio" name="hesitated" value="no"> 否</label>
+          </div>
+        </div>
+        <div class="question-row">
+          <span>提前离场/改止损？</span>
+          <div class="radio-group">
+            <label><input type="radio" name="earlyExit" value="yes"> 是</label>
+            <label><input type="radio" name="earlyExit" value="no"> 否</label>
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-section">
+        <label class="label">心理障碍（如未重仓）</label>
+        <div class="check-group">
+          <label class="check-item"><input type="checkbox" id="psyFear"> 恐高心理</label>
+          <label class="check-item"><input type="checkbox" id="psyLoss"> 近期亏损</label>
+          <label class="check-item"><input type="checkbox" id="psyConfidence"> 止损位信心不足</label>
+          <label class="check-item"><input type="checkbox" id="psyOther"> 其他</label>
+        </div>
+        <input type="text" id="otherReason" class="input" placeholder="其他原因...">
+      </div>
+      
+      <div class="form-section">
+        <label class="label">经验迭代</label>
+        <textarea id="ruleAdjustment" class="input" placeholder="规则修正：下次需要调整什么？"></textarea>
+        <textarea id="actionConclusion" class="input" placeholder="行动结论：下次遇到同类机会，我的指令是..." style="margin-top:8px"></textarea>
+      </div>
+      
+      <button class="save-btn" onclick="savePost()">保存复盘</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============ 密码与认证 ============
+const PASS_KEY = 'trading_system_pass';
+const DATA_KEY = 'trading_records';
+
+function hashPassword(password) {
+  // 简单哈希，生产环境建议用更安全的方式
+  let hash = 0;
+  for (let i = 0; i < password.length; i++) {
+    const char = password.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash;
+  }
+  return hash.toString();
+}
+
+function login() {
+  const password = document.getElementById('passwordInput').value;
+  if (!password) {
+    showLoginError('请输入密码');
+    return;
+  }
+  
+  const storedHash = localStorage.getItem(PASS_KEY);
+  const inputHash = hashPassword(password);
+  
+  if (!storedHash) {
+    // 首次设置密码
+    localStorage.setItem(PASS_KEY, inputHash);
+    sessionStorage.setItem('authenticated', 'true');
+    showApp();
+  } else if (storedHash === inputHash) {
+    // 密码正确
+    sessionStorage.setItem('authenticated', 'true');
+    showApp();
+  } else {
+    showLoginError('密码错误');
+  }
+}
+
+function showLoginError(msg) {
+  const el = document.getElementById('loginError');
+  el.textContent = msg;
+  el.classList.remove('hidden');
+}
+
+function logout() {
+  sessionStorage.removeItem('authenticated');
+  location.reload();
+}
+
+function showApp() {
+  document.getElementById('loginPage').style.display = 'none';
+  document.getElementById('app').classList.add('active');
+  loadRecords();
+  renderList();
+}
+
+function checkAuth() {
+  if (sessionStorage.getItem('authenticated') === 'true') {
+    showApp();
+  }
+}
+
+// ============ 数据管理 ============
+let records = [];
+let currentPreId = null;
+let linkedPreId = null;
+
+function loadRecords() {
+  const saved = localStorage.getItem(DATA_KEY);
+  if (saved) {
+    try {
+      records = JSON.parse(saved);
+    } catch (e) {
+      records = [];
+    }
+  }
+}
+
+function saveRecords() {
+  localStorage.setItem(DATA_KEY, JSON.stringify(records));
+}
+
+// ============ 视图切换 ============
+function showList() {
+  document.getElementById('listView').classList.remove('hidden');
+  document.getElementById('preView').classList.add('hidden');
+  document.getElementById('postView').classList.add('hidden');
+  document.getElementById('backBtn').classList.add('hidden');
+  currentPreId = null;
+  linkedPreId = null;
+  renderList();
+}
+
+function showPreForm(editId = null) {
+  document.getElementById('listView').classList.add('hidden');
+  document.getElementById('preView').classList.remove('hidden');
+  document.getElementById('postView').classList.add('hidden');
+  document.getElementById('backBtn').classList.remove('hidden');
+  
+  currentPreId = editId;
+  
+  if (editId) {
+    const record = records.find(r => r.id === editId);
+    if (record) {
+      document.getElementById('ticker').value = record.ticker || '';
+      document.getElementById('direction').value = record.direction || 'long';
+      document.getElementById('tradeDate').value = record.date || '';
+      document.getElementById('macroSignal').checked = record.macroSignal || false;
+      document.getElementById('technicalSignal').checked = record.technicalSignal || false;
+      document.getElementById('sentimentSignal').checked = record.sentimentSignal || false;
+      document.getElementById('notes').value = record.notes || '';
+      document.getElementById('totalCapital').value = record.totalCapital || '';
+      document.getElementById('riskPercent').value = record.riskPercent || '2';
+      document.getElementById('entryPrice').value = record.entryPrice || '';
+      document.getElementById('stopLossPrice').value = record.stopLossPrice || '';
+      document.getElementById('step1Condition').value = record.step1Condition || '';
+      document.getElementById('step2Condition').value = record.step2Condition || '';
+      document.getElementById('step3Condition').value = record.step3Condition || '';
+    }
+  } else {
+    // 重置表单
+    document.getElementById('ticker').value = '';
+    document.getElementById('direction').value = 'long';
+    document.getElementById('tradeDate').value = new Date().toISOString().split('T')[0];
+    document.getElementById('macroSignal').checked = false;
+    document.getElementById('technicalSignal').checked = false;
+    document.getElementById('sentimentSignal').checked = false;
+    document.getElementById('notes').value = '';
+    document.getElementById('totalCapital').value = '';
+    document.getElementById('riskPercent').value = '2';
+    document.getElementById('entryPrice').value = '';
+    document.getElementById('stopLossPrice').value = '';
+    document.getElementById('step1Condition').value = '逻辑初步形成';
+    document.getElementById('step2Condition').value = '';
+    document.getElementById('step3Condition').value = '';
+  }
+  
+  updateSignalCount();
+  calculateRisk();
+}
+
+function showPostForm(preId) {
+  document.getElementById('listView').classList.add('hidden');
+  document.getElementById('preView').classList.add('hidden');
+  document.getElementById('postView').classList.remove('hidden');
+  document.getElementById('backBtn').classList.remove('hidden');
+  
+  linkedPreId = preId;
+  const preRecord = records.find(r => r.id === preId);
+  document.getElementById('linkedInfo').textContent = 
+    `关联: ${preRecord?.ticker || '未命名'} (${preRecord?.date || ''})`;
+  
+  // 重置表单
+  document.getElementById('closeDate').value = new Date().toISOString().split('T')[0];
+  document.getElementById('actualPnL').value = '';
+  document.querySelectorAll('input[name="followedPlan"]').forEach(r => r.checked = false);
+  document.querySelectorAll('input[name="hesitated"]').forEach(r => r.checked = false);
+  document.querySelectorAll('input[name="earlyExit"]').forEach(r => r.checked = false);
+  document.getElementById('psyFear').checked = false;
+  document.getElementById('psyLoss').checked = false;
+  document.getElementById('psyConfidence').checked = false;
+  document.getElementById('psyOther').checked = false;
+  document.getElementById('otherReason').value = '';
+  document.getElementById('ruleAdjustment').value = '';
+  document.getElementById('actionConclusion').value = '';
+}
+
+// ============ 渲染列表 ============
+function renderList() {
+  const preRecords = records
+    .filter(r => r.type === 'pre')
+    .sort((a, b) => new Date(b.date) - new Date(a.date));
+  
+  const listEl = document.getElementById('recordList');
+  const emptyEl = document.getElementById('emptyState');
+  
+  if (preRecords.length === 0) {
+    listEl.innerHTML = '';
+    emptyEl.classList.remove('hidden');
+    return;
+  }
+  
+  emptyEl.classList.add('hidden');
+  
+  listEl.innerHTML = preRecords.map(pre => {
+    const post = records.find(r => r.type === 'post' && r.linkedPreId === pre.id);
+    const pnlClass = post ? (parseFloat(post.actualPnL) >= 0 ? 'profit' : 'loss') : '';
+    
+    return `
+      <div class="record-card">
+        <div class="record-header">
+          <span class="tag ${pre.direction === 'long' ? 'tag-long' : 'tag-short'}">
+            ${pre.direction === 'long' ? '多' : '空'}
+          </span>
+          <span class="ticker">${pre.ticker || '未命名'}</span>
+          <span class="record-date">${pre.date}</span>
+          ${post ? '<span class="completed-tag">已复盘</span>' : ''}
+        </div>
+        <div class="record-body">
+          <div class="record-row">
+            <span>入场: ${pre.entryPrice || '-'}</span>
+            <span>止损: ${pre.stopLossPrice || '-'}</span>
+            <span>数量: ${pre.totalQty || '-'}</span>
+          </div>
+          ${post ? `
+            <div class="record-row">
+              <span class="${pnlClass}">盈亏: ¥${post.actualPnL}</span>
+              <span>平仓: ${post.closeDate}</span>
+            </div>
+          ` : ''}
+        </div>
+        <div class="record-actions">
+          <button class="small-btn" onclick="showPreForm('${pre.id}')">编辑</button>
+          ${!post ? `<button class="small-btn-primary" onclick="showPostForm('${pre.id}')">写复盘</button>` : ''}
+          <button class="small-btn-danger" onclick="deleteRecord('${pre.id}')">删除</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ============ 计算 ============
+function updateSignalCount() {
+  const count = [
+    document.getElementById('macroSignal').checked,
+    document.getElementById('technicalSignal').checked,
+    document.getElementById('sentimentSignal').checked
+  ].filter(Boolean).length;
+  
+  const el = document.getElementById('signalCount');
+  el.textContent = `(${count}/2)`;
+  el.style.color = count >= 2 ? '#16a34a' : '#f59e0b';
+}
+
+function calculateRisk() {
+  const totalCapital = parseFloat(document.getElementById('totalCapital').value) || 0;
+  const riskPercent = parseFloat(document.getElementById('riskPercent').value) || 0;
+  const entryPrice = parseFloat(document.getElementById('entryPrice').value) || 0;
+  const stopLossPrice = parseFloat(document.getElementById('stopLossPrice').value) || 0;
+  
+  const riskAmount = totalCapital * riskPercent / 100;
+  const riskPerShare = Math.abs(entryPrice - stopLossPrice);
+  const totalQty = riskPerShare > 0 ? Math.floor(riskAmount / riskPerShare) : 0;
+  const totalAmount = totalQty * entryPrice;
+  
+  document.getElementById('riskAmount').textContent = riskAmount ? riskAmount.toFixed(2) : '-';
+  document.getElementById('totalQty').textContent = totalQty || '-';
+  document.getElementById('totalAmount').textContent = totalAmount ? `¥${totalAmount.toFixed(2)}` : '-';
+}
+
+// ============ 保存 ============
+function savePre() {
+  const id = currentPreId || Date.now().toString();
+  
+  const totalCapital = parseFloat(document.getElementById('totalCapital').value) || 0;
+  const riskPercent = parseFloat(document.getElementById('riskPercent').value) || 0;
+  const entryPrice = parseFloat(document.getElementById('entryPrice').value) || 0;
+  const stopLossPrice = parseFloat(document.getElementById('stopLossPrice').value) || 0;
+  
+  const riskAmount = (totalCapital * riskPercent / 100).toFixed(2);
+  const riskPerShare = Math.abs(entryPrice - stopLossPrice).toFixed(2);
+  const totalQty = parseFloat(riskPerShare) > 0 ? Math.floor(parseFloat(riskAmount) / parseFloat(riskPerShare)) : '';
+  const totalAmount = totalQty && entryPrice ? (totalQty * entryPrice).toFixed(2) : '';
+  
+  const record = {
+    id,
+    type: 'pre',
+    ticker: document.getElementById('ticker').value,
+    direction: document.getElementById('direction').value,
+    date: document.getElementById('tradeDate').value,
+    macroSignal: document.getElementById('macroSignal').checked,
+    technicalSignal: document.getElementById('technicalSignal').checked,
+    sentimentSignal: document.getElementById('sentimentSignal').checked,
+    notes: document.getElementById('notes').value,
+    totalCapital: document.getElementById('totalCapital').value,
+    riskPercent: document.getElementById('riskPercent').value,
+    entryPrice: document.getElementById('entryPrice').value,
+    stopLossPrice: document.getElementById('stopLossPrice').value,
+    step1Condition: document.getElementById('step1Condition').value,
+    step2Condition: document.getElementById('step2Condition').value,
+    step3Condition: document.getElementById('step3Condition').value,
+    riskAmount,
+    riskPerShare,
+    totalQty,
+    totalAmount,
+    createdAt: new Date().toISOString()
+  };
+  
+  if (currentPreId) {
+    records = records.map(r => r.id === currentPreId ? record : r);
+  } else {
+    records.push(record);
+  }
+  
+  saveRecords();
+  showList();
+}
+
+function savePost() {
+  if (!linkedPreId) {
+    alert('请先选择关联的交易前记录');
+    return;
+  }
+  
+  const psychologyIssues = [];
+  if (document.getElementById('psyFear').checked) psychologyIssues.push('恐高心理');
+  if (document.getElementById('psyLoss').checked) psychologyIssues.push('近期亏损');
+  if (document.getElementById('psyConfidence').checked) psychologyIssues.push('止损位信心不足');
+  if (document.getElementById('psyOther').checked) psychologyIssues.push('其他');
+  
+  const record = {
+    id: Date.now().toString(),
+    type: 'post',
+    linkedPreId,
+    closeDate: document.getElementById('closeDate').value,
+    actualPnL: document.getElementById('actualPnL').value,
+    followedPlan: document.querySelector('input[name="followedPlan"]:checked')?.value || '',
+    hesitated: document.querySelector('input[name="hesitated"]:checked')?.value || '',
+    earlyExit: document.querySelector('input[name="earlyExit"]:checked')?.value || '',
+    psychologyIssues,
+    otherReason: document.getElementById('otherReason').value,
+    ruleAdjustment: document.getElementById('ruleAdjustment').value,
+    actionConclusion: document.getElementById('actionConclusion').value,
+    createdAt: new Date().toISOString()
+  };
+  
+  records.push(record);
+  saveRecords();
+  showList();
+}
+
+function deleteRecord(id) {
+  if (confirm('确定删除？关联的复盘也会被删除。')) {
+    records = records.filter(r => r.id !== id && r.linkedPreId !== id);
+    saveRecords();
+    renderList();
+  }
+}
+
+// ============ 初始化 ============
+checkAuth();
+</script>
+
+</body>
+</html>
