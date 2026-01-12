@@ -329,6 +329,9 @@
     <h1 class="title">交易决策系统</h1>
     <div class="header-actions">
       <button id="backBtn" class="back-btn hidden" onclick="showList()">← 返回列表</button>
+      <button class="logout-btn" onclick="exportData()">导出</button>
+      <button class="logout-btn" onclick="document.getElementById('importFile').click()">导入</button>
+      <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
       <button class="logout-btn" onclick="logout()">退出</button>
     </div>
   </header>
@@ -849,6 +852,50 @@ function deleteRecord(id) {
 
 // ============ 初始化 ============
 checkAuth();
+
+// ============ 导出导入 ============
+function exportData() {
+  const data = {
+    exportDate: new Date().toISOString(),
+    records: records
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `交易记录备份_${new Date().toISOString().split('T')[0]}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (data.records && Array.isArray(data.records)) {
+        if (confirm(`确定导入 ${data.records.length} 条记录？\n（将与现有数据合并，不会覆盖）`)) {
+          // 合并数据，避免重复
+          const existingIds = new Set(records.map(r => r.id));
+          const newRecords = data.records.filter(r => !existingIds.has(r.id));
+          records = [...records, ...newRecords];
+          saveRecords();
+          renderList();
+          alert(`成功导入 ${newRecords.length} 条新记录`);
+        }
+      } else {
+        alert('无效的备份文件');
+      }
+    } catch (err) {
+      alert('文件解析失败');
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = ''; // 重置以便再次选择同一文件
+}
 </script>
 
 </body>
